@@ -1,0 +1,17 @@
+[build]
+  publish = "public"
+
+[dev]
+  publish = "public"
+  
+# Redirect and rewrite rules
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  # Only applies this rule if the requested file doesn't exist
+  force = false
+
+# Form handling setup
+[build.processing.html]
+  pretty_urls = true
