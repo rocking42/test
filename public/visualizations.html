@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent vs Income Visualizations</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/react@16.14.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16.14.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.1.16/umd/Recharts.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        .chart-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .card {
+            background-color: #fff6e6;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            overflow: hidden;
+            border: 2px solid #2e619b;
+        }
+        .card-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            margin: 0;
+            color: #2e619b;
+            font-size: 1.5rem;
+        }
+        .card-content {
+            padding: 25px;
+        }
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        .text-gray-500 {
+            color: #6b7280;
+        }
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        .h-80 {
+            height: 400px;
+        }
+        .grid {
+            display: grid;
+        }
+        .grid-cols-1 {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+        .gap-4 {
+            gap: 1rem;
+        }
+        .p-4 {
+            padding: 1rem;
+        }
+        .rounded-lg {
+            border-radius: 0.5rem;
+        }
+        .border {
+            border-width: 1px;
+            border-style: solid;
+        }
+        .text-lg {
+            font-size: 1.125rem;
+        }
+        .font-semibold {
+            font-weight: 600;
+        }
+        .font-bold {
+            font-weight: 700;
+        }
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+        .text-sm {
+            font-size: 0.875rem;
+        }
+        .font-medium {
+            font-weight: 500;
+        }
+        .space-y-8 > * + * {
+            margin-top: 2rem;
+        }
+        .w-full {
+            width: 100%;
+        }
+        
+        /* Color schemes for stats */
+        .bg-red-50 {
+            background-color: #fef2f2;
+        }
+        .border-red-100 {
+            border-color: #fee2e2;
+        }
+        .text-red-700 {
+            color: #b91c1c;
+        }
+        .text-red-600 {
+            color: #dc2626;
+        }
+        
+        .bg-green-50 {
+            background-color: #f0fdf4;
+        }
+        .border-green-100 {
+            border-color: #dcfce7;
+        }
+        .text-green-700 {
+            color: #15803d;
+        }
+        .text-green-600 {
+            color: #16a34a;
+        }
+        
+        .bg-indigo-50 {
+            background-color: #eef2ff;
+        }
+        .border-indigo-100 {
+            border-color: #e0e7ff;
+        }
+        .text-indigo-700 {
+            color: #4338ca;
+        }
+        .text-indigo-600 {
+            color: #4f46e5;
+        }
+        
+        @media (min-width: 768px) {
+            .md\:grid-cols-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Your Name</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="visualizations.html" class="active">Visualizations</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Rent vs Income Analysis</h1>
+            <p>Visualizing the growing disparity between housing costs and income growth over the past two decades.</p>
+        </section>
+
+        <div id="visualization-root"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Your Name. All rights reserved.</p>
+    </footer>
+    
+    <script type="text/babel">
+        const { Card, CardContent, CardHeader, CardTitle } = {
+            Card: ({ children, className }) => <div className={`card ${className || ''}`}>{children}</div>,
+            CardHeader: ({ children }) => <div className="card-header">{children}</div>,
+            CardTitle: ({ children }) => <h3 className="card-title">{children}</h3>,
+            CardContent: ({ children }) => <div className="card-content">{children}</div>
+        };
+        
+        // Access Recharts components
+        const {
+          LineChart, Line, BarChart, Bar, XAxis, YAxis, 
+          CartesianGrid, Tooltip, Legend, ResponsiveContainer
+        } = Recharts;
+
+        const RentIncomeVisualization = () => {
+          // Mock data generated from our analysis
+          const data = [
+            {"year":2005,"averageRent":800,"medianIncome":46000,"rentToIncomeRatio":20.9},
+            {"year":2006,"averageRent":846,"medianIncome":47196,"rentToIncomeRatio":21.5},
+            {"year":2007,"averageRent":895,"medianIncome":48423,"rentToIncomeRatio":22.2},
+            {"year":2008,"averageRent":947,"medianIncome":49682,"rentToIncomeRatio":22.9},
+            {"year":2009,"averageRent":1002,"medianIncome":50974,"rentToIncomeRatio":23.6},
+            {"year":2010,"averageRent":1061,"medianIncome":52299,"rentToIncomeRatio":24.3},
+            {"year":2011,"averageRent":1122,"medianIncome":53659,"rentToIncomeRatio":25.1},
+            {"year":2012,"averageRent":1187,"medianIncome":55054,"rentToIncomeRatio":25.9},
+            {"year":2013,"averageRent":1256,"medianIncome":56485,"rentToIncomeRatio":26.7},
+            {"year":2014,"averageRent":1329,"medianIncome":57954,"rentToIncomeRatio":27.5},
+            {"year":2015,"averageRent":1406,"medianIncome":59461,"rentToIncomeRatio":28.4},
+            {"year":2016,"averageRent":1487,"medianIncome":61007,"rentToIncomeRatio":29.3},
+            {"year":2017,"averageRent":1574,"medianIncome":62593,"rentToIncomeRatio":30.2},
+            {"year":2018,"averageRent":1665,"medianIncome":64220,"rentToIncomeRatio":31.1},
+            {"year":2019,"averageRent":1762,"medianIncome":65890,"rentToIncomeRatio":32.1},
+            {"year":2020,"averageRent":1864,"medianIncome":67603,"rentToIncomeRatio":33.1},
+            {"year":2021,"averageRent":1972,"medianIncome":69361,"rentToIncomeRatio":34.1},
+            {"year":2022,"averageRent":2086,"medianIncome":71164,"rentToIncomeRatio":35.2},
+            {"year":2023,"averageRent":2207,"medianIncome":73015,"rentToIncomeRatio":36.3},
+            {"year":2024,"averageRent":2335,"medianIncome":74913,"rentToIncomeRatio":37.4}
+          ];
+
+          // Calculate indexed values (2005 = 100) for relative comparison
+          const indexedData = data.map(item => {
+            return {
+              year: item.year,
+              indexedRent: Math.round((item.averageRent / data[0].averageRent) * 100),
+              indexedIncome: Math.round((item.medianIncome / data[0].medianIncome) * 100),
+              rentToIncomeRatio: item.rentToIncomeRatio
+            }
+          });
+
+          // Format for tooltips
+          const formatDollar = (value) => `${value.toLocaleString()}`;
+          const formatPercent = (value) => `${value}%`;
+          const formatIndex = (value) => `${value} (2005=100)`;
+
+          return (
+            <div className="space-y-8 chart-container">
+              <Card className="w-full">
+                <CardHeader>
+                  <CardTitle>Rent vs Income Growth (2005-2024)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="mb-4 text-sm text-gray-500">
+                    <p>Indexed values (2005 = 100)</p>
+                  </div>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart 
+                        data={indexedData} 
+                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis 
+                          dataKey="year" 
+                          tick={{ fontSize: 12 }}
+                          tickCount={10}
+                        />
+                        <YAxis 
+                          label={{ value: 'Index (2005=100)', angle: -90, position: 'insideLeft' }}
+                        />
+                        <Tooltip
+                          formatter={(value, name) => {
+                            if (name === 'indexedRent') return formatIndex(value);
+                            if (name === 'indexedIncome') return formatIndex(value);
+                            return value;
+                          }}
+                          labelFormatter={(label) => `Year: ${label}`}
+                        />
+                        <Legend />
+                        <Line 
+                          type="monotone" 
+                          dataKey="indexedRent" 
+                          name="Rent Growth" 
+                          stroke="#ef4444" 
+                          strokeWidth={2}
+                          activeDot={{ r: 8 }}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="indexedIncome" 
+                          name="Income Growth" 
+                          stroke="#22c55e" 
+                          strokeWidth={2}
+                          activeDot={{ r: 8 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="w-full">
+                <CardHeader>
+                  <CardTitle>Rent-to-Income Ratio (2005-2024)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="mb-4 text-sm text-gray-500">
+                    <p>Annual rent as percentage of median income</p>
+                  </div>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart 
+                        data={data} 
+                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis 
+                          dataKey="year" 
+                          tick={{ fontSize: 12 }}
+                          tickCount={10}
+                        />
+                        <YAxis 
+                          domain={[0, 40]}
+                          label={{ value: 'Percentage of Income (%)', angle: -90, position: 'insideLeft' }}
+                        />
+                        <Tooltip 
+                          formatter={(value) => [`${value}%`, 'Rent-to-Income Ratio']}
+                          labelFormatter={(label) => `Year: ${label}`}
+                        />
+                        <Bar 
+                          dataKey="rentToIncomeRatio" 
+                          name="Rent-to-Income Ratio" 
+                          fill="#6366f1" 
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="w-full">
+                <CardHeader>
+                  <CardTitle>Key Statistics (2005 vs 2024)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-red-50 p-4 rounded-lg border border-red-100">
+                      <h3 className="text-lg font-semibold text-red-700">Average Monthly Rent</h3>
+                      <p className="text-2xl font-bold">${data[data.length-1].averageRent}</p>
+                      <p className="text-sm text-red-600">Up from ${data[0].averageRent} in 2005</p>
+                      <p className="text-lg font-medium text-red-700">+192% increase</p>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                      <h3 className="text-lg font-semibold text-green-700">Median Annual Income</h3>
+                      <p className="text-2xl font-bold">${data[data.length-1].medianIncome}</p>
+                      <p className="text-sm text-green-600">Up from ${data[0].medianIncome} in 2005</p>
+                      <p className="text-lg font-medium text-green-700">+63% increase</p>
+                    </div>
+                    <div className="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                      <h3 className="text-lg font-semibold text-indigo-700">Rent-to-Income Ratio</h3>
+                      <p className="text-2xl font-bold">{data[data.length-1].rentToIncomeRatio}%</p>
+                      <p className="text-sm text-indigo-600">Up from {data[0].rentToIncomeRatio}% in 2005</p>
+                      <p className="text-lg font-medium text-indigo-700">+79% increase</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          );
+        };
+
+        // Render the component to the DOM
+        ReactDOM.render(<RentIncomeVisualization />, document.getElementById('visualization-root'));
+    </script>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -3,6 +3,7 @@
 
 [dev]
   publish = "public"
+  targetPort = 3000
   
 # Redirect and rewrite rules
 [[redirects]]
