@@ -5,16 +5,52 @@
     box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Playfair Display', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f9f9f9;
+    background-color: #f2f0e6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Van Gogh-inspired swirl background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(#f8df8b33 8%, transparent 8%),
+        radial-gradient(#5b95e633 8%, transparent 8%);
+    background-position: 0 0, 50px 50px;
+    background-size: 100px 100px;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* Page load animation */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+section, .project-card, .hero, .logo, nav ul {
+    animation: fadeIn 0.8s ease-out forwards;
 }
 
 a {
     text-decoration: none;
-    color: #2a7ae2;
+    color: #2e619b; /* Van Gogh blue */
+    transition: all 0.3s;
+}
+
+a:hover {
+    color: #e09236; /* Van Gogh yellow-orange */
 }
 
 ul {
@@ -23,8 +59,32 @@ ul {
 
 /* Header and Navigation */
 header {
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff6e6; /* Cream color for parchment feel */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid #5b95e6; /* Van Gogh blue border */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add Van Gogh-inspired brush strokes to header */
+header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, 
+        #e09236, #f8df8b, #5b95e6, #2e619b, 
+        #eec75c, #8bb0e8, #e09236);
+    background-size: 1000% 100%;
+    animation: brushStroke 15s linear infinite;
+    z-index: 1;
+}
+
+@keyframes brushStroke {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }
 
 nav {
@@ -78,32 +138,109 @@ h1, h2, h3 {
 /* Hero section */
 .hero {
     text-align: center;
-    padding: 60px 0;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Van Gogh Starry Night-inspired backdrop */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 70% 20%, #eec75c 1px, transparent 8px),
+        radial-gradient(circle at 30% 60%, #5b95e6 1px, transparent 6px),
+        radial-gradient(circle at 60% 80%, #e09236 1px, transparent 10px);
+    background-size: 80px 80px;
+    background-position: 0 0;
+    opacity: 0.2;
+    z-index: -1;
+    animation: twinkle 15s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    0% { background-position: 0 0; opacity: 0.15; }
+    50% { opacity: 0.25; }
+    100% { background-position: 80px 80px; opacity: 0.15; }
 }
 
 .hero h1 {
-    font-size: 48px;
-    margin-bottom: 16px;
+    font-size: 52px;
+    margin-bottom: 25px;
+    color: #2e619b;
+    position: relative;
+    display: inline-block;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.hero h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 60%;
+    height: 4px;
+    background: linear-gradient(90deg, #e09236, #f8df8b, #5b95e6);
+    transform: translateX(-50%);
+    border-radius: 4px;
 }
 
 .hero p {
-    font-size: 20px;
-    color: #666;
-    margin-bottom: 30px;
+    font-size: 22px;
+    color: #555;
+    margin-bottom: 40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+    animation: fadeIn 1s ease-out 0.6s both;
 }
 
+/* Van Gogh inspired button */
 .btn {
     display: inline-block;
-    background-color: #2a7ae2;
+    background-color: #2e619b; /* Van Gogh blue */
     color: white;
-    padding: 12px 24px;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: background-color 0.3s;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    box-shadow: 0 4px 12px rgba(46, 97, 155, 0.3);
+    border: 2px solid transparent;
+    z-index: 1;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #e09236, #f8df8b);
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease-out;
 }
 
 .btn:hover {
-    background-color: #1c6bc8;
+    color: #333;
+    border-color: #e09236;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(224, 146, 54, 0.4);
+}
+
+.btn:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
 /* Projects section */
@@ -114,17 +251,76 @@ h1, h2, h3 {
 }
 
 .project-card {
-    background-color: white;
-    border-radius: 8px;
+    background-color: #fff6e6;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    padding: 25px;
+    position: relative;
+    transition: all 0.5s;
+    border: 2px solid #2e619b;
+    box-shadow: 
+        0 6px 15px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 3px #fff,
+        inset 0 0 0 6px rgba(224, 146, 54, 0.3);
+}
+
+/* Van Gogh-inspired brush stroke corners */
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: 
+        linear-gradient(45deg, #e09236 0%, transparent 40%),
+        linear-gradient(135deg, #5b95e6 0%, transparent 40%),
+        linear-gradient(225deg, #f8df8b 0%, transparent 40%),
+        linear-gradient(315deg, #2e619b 0%, transparent 40%);
+    border-radius: 15px;
+    z-index: -1;
+    opacity: 0.4;
+    transition: all 0.4s;
 }
 
 .project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-7px) rotate(1deg);
+    box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.15),
+        inset 0 0 0 3px #fff,
+        inset 0 0 0 6px rgba(224, 146, 54, 0.6);
+}
+
+.project-card:hover::before {
+    opacity: 0.7;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+}
+
+.project-card h3 {
+    color: #2e619b;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.project-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(90deg, #e09236, transparent);
+}
+
+.project-card p {
+    color: #555;
+    line-height: 1.7;
 }
 
 /* About page */
